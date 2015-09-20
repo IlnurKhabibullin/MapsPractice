@@ -58,7 +58,6 @@ public class MainActivity extends FragmentActivity implements
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-
         mMap = googleMap;
         buildGoogleApiClient();
 
@@ -132,7 +131,8 @@ public class MainActivity extends FragmentActivity implements
         protected String doInBackground(Void... params) {
             try {
                 String urlString = "https://geocode-maps.yandex.ru/1.x/?geocode=" + mLatitude + ","
-                        + mLongitude + "&sco=latlong&sco=latlong&format=json";
+                        + mLongitude + "&kind=locality&sco=latlong&format=json&results=10&ll=" + mLatitude + ","
+                        + mLongitude;
                 URL url = new URL(urlString);
                 HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
@@ -160,13 +160,18 @@ public class MainActivity extends FragmentActivity implements
                     try {
                         List<Place> places = ParseUtils.parse(result);
                         addMarkers(mMap, places);
-                        Routing routing = new Routing.Builder()
-                                .travelMode(Routing.TravelMode.WALKING)
-                                .withListener(this)
-                                .waypoints(getWaypoints(places))
-                                .build();
-                        routing.execute();
-                    } catch (JSONException e) {
+                        List<LatLng> waypoints = getWaypoints(places);
+//                        for (int i = 0; i < places.size()/10 + 1; i++) {
+//                            List<LatLng> buffer = waypoints.subList(i*10 - i, Math.min((i + 1) * 10 - i, waypoints.size()));
+                        for (int i = 0; i < waypoints.size() - 1; i++) {
+                            Routing routing = new Routing.Builder()
+                                    .travelMode(Routing.TravelMode.WALKING)
+                                    .withListener(this)
+                                    .waypoints(waypoints.get(i), waypoints.get(i + 1))
+                                    .build();
+                            routing.execute();
+                        }
+                    } catch (JSONException | NullPointerException e) {
                         e.printStackTrace();
                     }
                 }
@@ -208,7 +213,7 @@ public class MainActivity extends FragmentActivity implements
         public void onRoutingSuccess(PolylineOptions polylineOptions, Route route) {
             PolylineOptions polyoptions = new PolylineOptions();
             polyoptions.color(Color.BLUE);
-            polyoptions.width(10);
+            polyoptions.width(5);
             polyoptions.addAll(polylineOptions.getPoints());
             if (mMap != null)
                 mMap.addPolyline(polyoptions);

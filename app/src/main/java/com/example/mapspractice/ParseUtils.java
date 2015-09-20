@@ -1,15 +1,12 @@
 package com.example.mapspractice;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Created by Ильнур on 16.09.2015.
- */
 public class ParseUtils {
 
     private static final String JSON_RESPONSE = "response";
@@ -37,7 +34,6 @@ public class ParseUtils {
             place.setName(geoObject.getString(JSON_NAME));
             place.setLatitude(Double.parseDouble(coordinates[1]));
             place.setLongitute(Double.parseDouble(coordinates[0]));
-
             places.add(place);
         }
         return places;
