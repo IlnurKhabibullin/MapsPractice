@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="button_notification">#03A9F4</color>
+    <color name="alarm_notification">#009688</color>
+    <color name="after_exit_notification">#F44336</color>
+    <color name="boot_notification">#3F51B5</color>
+</resources>

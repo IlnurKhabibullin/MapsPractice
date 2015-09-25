@@ -1,4 +1,4 @@
-package com.example.mapspractice;
+package com.example.notificationspractice;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
